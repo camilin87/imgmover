@@ -5,5 +5,10 @@ def basedir
 end
 
 task :move_folder_debug do
+    puts "moving folders DEBUG"
     puts basedir
+end
+
+task :move_folders do
+    puts "moving folders"
 end
