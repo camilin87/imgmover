@@ -23,24 +23,22 @@ def move_folders_internal(is_debug=false)
 
             for filename in get_filenames full_dir_path do
                 if not should_ignore_file filename
-                    puts "Analyzing #{filename}"
+                    puts "... #{filename}"
 
                     exif_raw_data = read_exif filename
                     year = extract_year exif_raw_data
 
-                    puts year
+                    # puts year
 
                     if year.length > 0
-                        puts "moving folder to _#{year}"
+                        dest_folder = get_year_folder year
+                        create_folder_if_needed dest_folder
+                        puts "..> folder to #{dest_folder}"
 
                         break
                     end
-                else
-                    puts "Skipping #{filename}"
                 end
             end
-
-            # puts full_dir_path
         end
     end
 end
@@ -88,7 +86,6 @@ def extract_year(exif_raw_data)
     original_time_arr = exif_raw_data.split(/(\n)/).delete_if{ |l|
         not l.include? "Date/Time Original" 
     }
-    # puts original_time_arr
 
     if original_time_arr.size == 0
         return ""
@@ -101,3 +98,14 @@ def extract_year_from_time_str(exif_time_line)
     # Date/Time Original              : 2013:09:25 19:36:11.598
     return exif_time_line.split(/(:)/)[2].strip
 end
+
+def get_year_folder(year)
+    return File.join(basedir, "_#{year}/")
+end
+
+def create_folder_if_needed(dir_full_path)
+    if not Dir.exists? dir_full_path
+        mkdir dir_full_path
+    end
+end
+
