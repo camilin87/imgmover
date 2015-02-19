@@ -17,29 +17,31 @@ def move_folders_internal(is_debug=false)
     puts "moving folders #{environment}"
     puts basedir
 
-    for dirname in get_subdirs(basedir) do
-        if not should_ignore_directory dirname
-            full_dir_path = get_full_path dirname
+    for dirname in get_subdirs_to_analyze(basedir) do
+        full_dir_path = get_full_path dirname
 
-            for filename in get_filenames full_dir_path do
-                if not should_ignore_file filename
-                    puts "... #{filename}"
+        for filename in get_filenames full_dir_path do
+            if not should_ignore_file filename
+                puts "... #{filename}"
 
-                    exif_raw_data = read_exif filename
-                    year = extract_year exif_raw_data
+                exif_raw_data = read_exif filename
+                year = extract_year exif_raw_data
 
-                    # puts year
-
-                    if year.length > 0
-                        dest_folder = get_year_folder year
-                        create_folder_if_needed dest_folder, is_debug
-                        move_folder full_dir_path, dest_folder, is_debug
-                        break
-                    end
+                if year.length > 0
+                    dest_folder = get_year_folder year
+                    create_folder_if_needed dest_folder, is_debug
+                    move_folder full_dir_path, dest_folder, is_debug
+                    break
                 end
             end
         end
     end
+end
+
+def get_subdirs_to_analyze(parent_dir)
+    return get_subdirs(parent_dir).select { |dirname|
+        not should_ignore_directory dirname
+    }
 end
 
 def get_subdirs(parent_dir)
