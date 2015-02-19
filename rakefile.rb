@@ -53,7 +53,7 @@ def should_ignore_directory(directory_name)
 end
 
 def should_ignore_file(filename)
-    for ext in [".mov", ".png"] do
+    for ext in [".mov", ".png", ".avi", ".mp4"] do
         if filename.downcase.end_with? ext
             return true
         end
