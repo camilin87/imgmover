@@ -32,7 +32,7 @@ def move_folders_internal(is_debug=false)
 
                     if year.length > 0
                         dest_folder = get_year_folder year
-                        create_folder_if_needed dest_folder
+                        create_folder_if_needed dest_folder, is_debug
                         puts "..> folder to #{dest_folder}"
 
                         break
@@ -103,9 +103,11 @@ def get_year_folder(year)
     return File.join(basedir, "_#{year}/")
 end
 
-def create_folder_if_needed(dir_full_path)
+def create_folder_if_needed(dir_full_path, is_debug)
     if not Dir.exists? dir_full_path
-        mkdir dir_full_path
+        puts "mkdir #{dir_full_path}"
+        if not is_debug
+            mkdir dir_full_path
+        end
     end
 end
-
