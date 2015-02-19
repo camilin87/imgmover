@@ -20,19 +20,17 @@ def move_folders_internal(is_debug=false)
     for dirname in get_subdirs_to_analyze(basedir) do
         full_dir_path = get_full_path dirname
 
-        for filename in get_filenames full_dir_path do
-            if not should_ignore_file filename
-                puts "... #{filename}"
+        for filename in get_filenames_to_analyze full_dir_path do
+            puts "... #{filename}"
 
-                exif_raw_data = read_exif filename
-                year = extract_year exif_raw_data
+            exif_raw_data = read_exif filename
+            year = extract_year exif_raw_data
 
-                if year.length > 0
-                    dest_folder = get_year_folder year
-                    create_folder_if_needed dest_folder, is_debug
-                    move_folder full_dir_path, dest_folder, is_debug
-                    break
-                end
+            if year.length > 0
+                dest_folder = get_year_folder year
+                create_folder_if_needed dest_folder, is_debug
+                move_folder full_dir_path, dest_folder, is_debug
+                break
             end
         end
     end
@@ -65,6 +63,12 @@ end
 
 def get_full_path(directory_name)
     return File.join(basedir, directory_name)
+end
+
+def get_filenames_to_analyze(parent_dir)
+    return get_filenames(parent_dir).select { |filename|
+        not should_ignore_file filename
+    }
 end
 
 def get_filenames(parent_dir)
