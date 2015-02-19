@@ -22,7 +22,14 @@ def move_folders_internal(is_debug=false)
             full_dir_path = get_full_path dirname
 
             for filename in get_filenames full_dir_path do
-                puts filename
+                # puts filename
+
+                std_filename = standardize_filename filename
+                puts std_filename
+
+                # output = `exiftool #{filename}`
+                # puts output
+
             end
 
             # puts full_dir_path
@@ -46,4 +53,11 @@ end
 
 def get_filenames(parent_dir)
     return Dir["#{parent_dir}/*.*"]
+end
+
+def standardize_filename(full_path)
+    for c in [' ', '(', ')', '\''] do
+        full_path.gsub!("#{c}"){"\\#{c}"}
+    end
+    return full_path
 end
