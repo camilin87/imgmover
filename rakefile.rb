@@ -13,16 +13,12 @@ task :move_folders do
 end
 
 def move_folders_internal(is_debug=false)
-    environment = is_debug ? "DEBUG" : ""
-    puts "moving folders #{environment}"
-    puts basedir
+    log_running_environment is_debug
 
     for dirname in get_subdirs_to_analyze(basedir) do
         full_dir_path = get_full_path dirname
 
         for filename in get_filenames_to_analyze full_dir_path do
-            puts "... #{filename}"
-
             exif_raw_data = read_exif filename
             year = extract_year exif_raw_data
 
@@ -34,6 +30,12 @@ def move_folders_internal(is_debug=false)
             end
         end
     end
+end
+
+def log_running_environment(is_debug)
+    environment = is_debug ? "DEBUG" : ""
+    puts "moving folders #{environment}"
+    puts basedir
 end
 
 def get_subdirs_to_analyze(parent_dir)
@@ -83,8 +85,12 @@ def standardize_filename(full_path)
 end
 
 def read_exif(filename)
-    std_filename = standardize_filename filename                    
-    return `exiftool #{std_filename}`
+    std_filename = standardize_filename filename 
+
+    exif_command = "exiftool #{std_filename}"
+    puts exif_command
+
+    return `#{exif_command}`
 end
 
 def extract_year(exif_raw_data)
