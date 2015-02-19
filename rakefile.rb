@@ -18,8 +18,14 @@ def move_folders_internal(is_debug=false)
     puts basedir
 
     for dirname in get_subdirs(basedir) do
-        if not should_ignore_directory(dirname)
-            puts dirname
+        if not should_ignore_directory dirname
+            full_dir_path = get_full_path dirname
+
+            for filename in get_filenames full_dir_path do
+                puts filename
+            end
+
+            # puts full_dir_path
         end
     end
 end
@@ -32,4 +38,12 @@ end
 
 def should_ignore_directory(directory_name)
     return directory_name.start_with?("_")
+end
+
+def get_full_path(directory_name)
+    return File.join(basedir, directory_name)
+end
+
+def get_filenames(parent_dir)
+    return Dir["#{parent_dir}/*.*"]
 end
