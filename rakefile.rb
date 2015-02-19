@@ -33,8 +33,7 @@ def move_folders_internal(is_debug=false)
                     if year.length > 0
                         dest_folder = get_year_folder year
                         create_folder_if_needed dest_folder, is_debug
-                        puts "..> folder to #{dest_folder}"
-
+                        move_folder full_dir_path, dest_folder, is_debug
                         break
                     end
                 end
@@ -109,5 +108,17 @@ def create_folder_if_needed(dir_full_path, is_debug)
         if not is_debug
             mkdir dir_full_path
         end
+    end
+end
+
+def move_folder(source_path, dest_path, is_debug)
+    std_source = standardize_filename source_path
+    std_dest = standardize_filename dest_path
+
+    move_command = "mv -v #{std_source} #{std_dest}"
+    puts move_command
+
+    if not is_debug
+        sh move_command
     end
 end
